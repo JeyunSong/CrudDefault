@@ -37,7 +37,6 @@ public class CommentService {
     @Transactional
     public CommentResponseDto create(CommentRequestDto commentRequestDto, User user, int postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
-        post.PlusComment();
         Comment comment = commentRepository.save(new Comment(commentRequestDto.getContent(), post, user));
         return CommentResponseDto.toDto(comment);
     }
@@ -81,12 +80,10 @@ public class CommentService {
     // 댓글 삭제
     @Transactional
     public void deleteComment(int postId, int commentId, User user){
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
         if (!user.equals(comment.getUser())) {
             throw new RequestException(ACCESS_DENIED_EXCEPTION);
         }
-        post.MinusComment();
         commentRepository.delete(comment);
     }
 }

@@ -33,9 +33,6 @@ public class Post {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-//    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Like> likes;
-
     @Column(nullable = false)
     private int likeNum;
 
@@ -75,11 +72,5 @@ public class Post {
     }
     public void MinusLike(){
         this.likeNum -= 1;
-    }
-    public void PlusComment(){
-        this.commentNum += 1;
-    }
-    public void MinusComment(){
-        this.commentNum -= 1;
     }
 }

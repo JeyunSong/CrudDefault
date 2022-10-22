@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 import static crud.team.exception.ExceptionType.ACCESS_DENIED_EXCEPTION;
 import static crud.team.exception.ExceptionType.NOT_FOUND_EXCEPTION;
+import static crud.team.response.Response.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,7 +38,7 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
 
-        return Response.success(commentService.create(commentRequestDto, user, postId));
+        return success(commentService.create(commentRequestDto, user, postId));
     }
 
     // 댓글 조회
@@ -45,14 +46,14 @@ public class CommentController {
     @ResponseStatus(HttpStatus.OK)
     public Response findAllComment(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)
                                        Pageable pageable, @PathVariable int postId) {
-        return Response.success(commentService.findAllComment(pageable, postId));
+        return success(commentService.findAllComment(pageable, postId));
     }
 
     // 댓글 상세 조회
     @GetMapping("/post/comment/{commentId}")
     @ResponseStatus(HttpStatus.OK)
     public Response findComment(@PathVariable int commentId) {
-        return Response.success(commentService.findComment(commentId));
+        return success(commentService.findComment(commentId));
     }
 
     // 댓글 수정
@@ -62,7 +63,7 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RequestException(ACCESS_DENIED_EXCEPTION));
 
-        return Response.success(commentService.updateComment(postId, commentId, commentRequestDto, user));
+        return success(commentService.updateComment(postId, commentId, commentRequestDto, user));
     }
 
     // 댓글 삭제
@@ -72,6 +73,6 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RequestException(ACCESS_DENIED_EXCEPTION));
         commentService.deleteComment(postId, commentId, user);
-        return Response.success();
+        return success();
     }
 }
