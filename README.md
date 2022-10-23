@@ -13,6 +13,7 @@
 ## API
 - AUTH 
 > Spring Security JWT를 활용한 회원가입/로그인 
+>> ID + NAME 중복체크
 - USER
 > 유저 정보 조회 + 수정 + 삭제
 - MY PAGE
