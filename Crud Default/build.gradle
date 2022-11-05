@@ -1,7 +1,14 @@
+buildscript { // querydsl
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'crud'
@@ -41,8 +48,45 @@ dependencies {
     // AWS S3
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
 
-}
+    // REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // JSON
+    implementation 'org.json:json:20220924'
+
+
+}
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// querydsl
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl { // querydsl
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets { // querydsl
+    main.java.srcDir querydslDir
+}
+
+configurations { // querydsl
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl { // querydsl
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+jar {
+    enabled = false
 }

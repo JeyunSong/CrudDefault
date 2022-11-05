@@ -62,7 +62,7 @@ public class Post {
         this.imgUrl = imgUrl;
         this.fileName = fileName;
     }
-    public void updatePost(String title, String content){
+    public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
     }
@@ -72,5 +72,9 @@ public class Post {
     }
     public void MinusLike(){
         this.likeNum -= 1;
+    }
+
+    public void CommentNum(int commentNum) {
+        this.commentNum = commentNum;
     }
 }

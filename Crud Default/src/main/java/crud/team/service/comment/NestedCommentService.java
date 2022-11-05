@@ -1,12 +1,11 @@
 package crud.team.service.comment;
 
 
-import crud.team.exception.RequestException;
-import crud.team.dto.comment.NestedCommentRequestDto;
-import crud.team.dto.comment.NestedCommentResponseDto;
+import crud.team.dto.NC;
 import crud.team.entity.comment.Comment;
 import crud.team.entity.comment.NestedComment;
 import crud.team.entity.user.User;
+import crud.team.exception.RequestException;
 import crud.team.repository.comment.CommentRepository;
 import crud.team.repository.comment.NestedCommentRepository;
 import crud.team.repository.user.UserRepository;
@@ -28,21 +27,21 @@ public class NestedCommentService {
 
     // 대댓글 작성
     @Transactional
-    public NestedCommentResponseDto create(NestedCommentRequestDto nestedCommentRequestDto, User user, int id) {
+    public NC.NestedCommentResponseDto create(NC.NestedCommentRequestDto nestedCommentRequestDto, User user, int id) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
         NestedComment nestedComment = nestedCommentRepository.save(new NestedComment(nestedCommentRequestDto.getContent(), comment, user));
-        return NestedCommentResponseDto.toDto(nestedComment);
+        return NC.NestedCommentResponseDto.toDto(nestedComment);
     }
 
     // 대댓글 수정
     @Transactional
-    public NestedCommentResponseDto updateNestedComment(int id, NestedCommentRequestDto nestedCommentRequestDto, User user){
+    public NC.NestedCommentResponseDto updateNestedComment(int id, NC.NestedCommentRequestDto nestedCommentRequestDto, User user){
         NestedComment nestedComment = nestedCommentRepository.findById(id).orElseThrow(() -> new RequestException(NOT_FOUND_EXCEPTION));
         if (!user.equals(nestedComment.getUser())) {
             throw new RequestException(ACCESS_DENIED_EXCEPTION);
         }
         nestedComment.update(nestedCommentRequestDto.getContent());
-        return NestedCommentResponseDto.toDto(nestedComment);
+        return NC.NestedCommentResponseDto.toDto(nestedComment);
     }
 
     // 대댓글 삭제

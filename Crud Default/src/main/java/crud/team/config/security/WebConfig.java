@@ -1,4 +1,4 @@
-package crud.team.config;
+package crud.team.config.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*")
+                .allowedHeaders("*")
+                .exposedHeaders("AccessToken")
+                .exposedHeaders("RefreshToken")
+                .allowCredentials(true)
                 .maxAge(3600L);
     }
 }

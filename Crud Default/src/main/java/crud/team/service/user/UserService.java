@@ -64,5 +64,10 @@ public class UserService {
             throw new RequestException(ACCESS_DENIED_EXCEPTION);
         }
     }
+
+    @Transactional
+    public void deleteAll(User user) {
+
+    }
 }
 
