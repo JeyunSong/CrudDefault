@@ -1,8 +1,10 @@
-# 🦊Spring CRUD PROJECT (2022/10/22)
+# 🦊Spring CRUD PROJECT (Update 2022/11/05)
 계속해서 Develop 진행 중입니다.
 
 ## USE
 - Spring Web
+- Redis
+- Query DSL
 - Spring Security
 - JWT
 - MySQL
@@ -21,9 +23,11 @@
 >> 좋아요 한 게시물 불러오기 
 - POST
 > 게시물 조회 + 작성 + 수정 + 삭제 + 좋아요
->> 게시물 전체 조회 시 페이징 기능 | 키워드 검색 | 인기 게시물 조회 
+>> 게시물 전체 조회 시 페이징 기능 | 키워드 검색 | 인기 게시물 조회 -> Query DSL Refactor
 >>> AWS S3를 사용한 이미지 업로드 + 삭제 기능
 >>>> 게시물 상세 조회 시 댓글 출력
+>>>>> 게시물 Cache를 통한 조회 성능 개선 
+>>>>>> 인기 게시물 선택 알고리즘을 통한 Cache WarmUp
 - COMMENT
 > 댓글 조회 + 작성 + 수정 + 삭제
 >> 대댓글 작성 + 수정 + 삭제
