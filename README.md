@@ -1,4 +1,4 @@
-# 🦊Spring CRUD PROJECT (Update 2022/11/05)
+# 🦊Spring CRUD PROJECT
 계속해서 Develop 진행 중입니다.
 
 ## USE
