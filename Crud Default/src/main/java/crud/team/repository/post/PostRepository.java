@@ -6,9 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends JpaRepository<Post, Integer>, PostRepositoryCustom {
     Page<Post> findAllPageBy(Pageable pageable);
-    Page<Post> findByTitleContaining(String keyword, Pageable pageable);
     Page<Post> findByUserId(Pageable pageable, int id);
     Page<Post> findByLikeNumGreaterThanEqual(Pageable pageable, int i);
 

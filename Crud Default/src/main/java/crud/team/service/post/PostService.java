@@ -11,7 +11,6 @@ import crud.team.entity.post.Like;
 import crud.team.entity.post.Post;
 import crud.team.entity.user.User;
 import crud.team.exception.RequestException;
-import crud.team.repository.comment.CommentRepository;
 import crud.team.repository.post.LikeRepository;
 import crud.team.repository.post.PostRepository;
 import crud.team.service.RedisService;
@@ -23,13 +22,15 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,30 +46,37 @@ import static crud.team.exception.ExceptionType.NOT_FOUND_EXCEPTION;
 public class PostService {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-    private final CommentRepository commentRepository;
     private final AmazonS3Client amazonS3Client;
     private final RedisService redisService;
+    private final RedisTemplate<String, PostSimpleRequestDto> redisTemplate;
 
 
     @Value("${cloud.aws.s3.bucket}")
     String bucket;
 
 
+    // Named Post - WarmUp
+    @Transactional
+    public void warmup(){
+        log.info("Warm Up Named Post PipeLine Start....");
 
-    // Warm UP -> Named Post Put !
-    @Transactional(readOnly = true)
-    public void warmup() {
+        List<PostSimpleRequestDto> list = postRepository.warmupNamedPost();
+        pipeline(list);
+    }
 
-        log.info("Warm Up Start....");
+    // Named Post - PipeLine
+    public void pipeline(List<PostSimpleRequestDto> list) {
+        RedisSerializer keySerializer = redisTemplate.getStringSerializer();
+        RedisSerializer valueSerializer = redisTemplate.getValueSerializer();
 
-        List<Post> post = postRepository.findAll();
-        List<PostDetailRequestDto> postDetailRequestDtos = new ArrayList<>();
-
-        for (int r=0; r<500; r++) { // r=1
-            if (r == post.size()) break;
-            postDetailRequestDtos.add(PostDetailRequestDto.toDto(post.get(r)));
-            redisService.setPost("post::" + postDetailRequestDtos.get(r).getPostId(), postDetailRequestDtos.get(r), Duration.ofSeconds(100));
-        }
+        redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            list.forEach(i -> {
+                String key = "post::"+i.getPostId();
+                connection.set(keySerializer.serialize(key), //stringCommands 수정
+                        valueSerializer.serialize(i));
+            });
+            return null;
+        });
     }
 
     // 게시글 작성
@@ -129,7 +137,20 @@ public class PostService {
     // Need QueryDSL
     @Transactional(readOnly = true)
     public List<PostSimpleRequestDto> search(String keyword, Pageable pageable) {
-        Page<Post> posts = postRepository.findByTitleContaining(keyword, pageable);
+        Page<Post> posts = postRepository.keywordFilter(pageable, keyword);
+
+        List<PostSimpleRequestDto> postSimpleRequestDtos = new ArrayList<>();
+
+        posts.stream().forEach(i -> postSimpleRequestDtos.add(PostSimpleRequestDto.toDto(i)));
+        return postSimpleRequestDtos;
+    }
+
+    // 게시글 필터링 조회
+    // Need QueryDSL
+    @Transactional(readOnly = true)
+    public List<PostSimpleRequestDto> filterSearch(String imgCheck, String writeKeyword, String keyword, String sorting, Pageable pageable) {
+        Page<Post> posts = postRepository.mainFilter(imgCheck, writeKeyword, keyword, sorting, pageable);
+
         List<PostSimpleRequestDto> postSimpleRequestDtos = new ArrayList<>();
 
         posts.stream().forEach(i -> postSimpleRequestDtos.add(PostSimpleRequestDto.toDto(i)));
@@ -138,7 +159,6 @@ public class PostService {
 
 
     // 인기 게시글 조회
-    // Need QueryDSL
     @Transactional(readOnly = true)
     public List<PostSimpleRequestDto> findPopularPost(Pageable pageable) {
         Page<Post> posts = postRepository.findByLikeNumGreaterThanEqual(pageable, 5);

@@ -29,20 +29,9 @@ public class RedisConfig {
         return new LettuceConnectionFactory(host, port);
     }
 
-
     @Bean
-    public RedisTemplate<String, PostDetailRequestDto> redisTemplateDto() {
+    public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<String, PostDetailRequestDto> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-        return redisTemplate;
-    }
-
-
-    @Bean
-    public RedisTemplate<String, String> redisTemplate() {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());

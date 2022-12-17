@@ -83,11 +83,16 @@ public class PostController {
         return success();
     }
 
-    // 게시글 키워드 검색
-    // ex) http://localhost:8080/api/post/search?keyword=example&page=0
+    // 키워드 검색
     @GetMapping("/post/search")
-    public Response search(String keyword, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response keywordSearch(String keyword, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return success(postService.search(keyword, pageable));
+    }
+
+    // 필터링 검색
+    @GetMapping("/post/search/filter")
+    public Response filterSearch( String imgCheck, String writeKeyword, String keyword, String sorting, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return success(postService.filterSearch(imgCheck, writeKeyword, keyword, sorting, pageable));
     }
 
     // 게시글 좋아요

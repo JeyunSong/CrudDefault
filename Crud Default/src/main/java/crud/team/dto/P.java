@@ -81,6 +81,7 @@ public class P {
         private String createTime;
         private int likeNum;
         private int commentNum;
+
         public static P.PostSimpleRequestDto toDto(Post post) {
             return new P.PostSimpleRequestDto(
                     post.getId() ,

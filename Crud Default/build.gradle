@@ -58,6 +58,11 @@ dependencies {
     // JSON
     implementation 'org.json:json:20220924'
 
+    // testcontainers
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation "org.testcontainers:testcontainers:1.17.6"
+    testImplementation "org.testcontainers:junit-jupiter:1.17.6"
+
 
 }
 tasks.named('test') {

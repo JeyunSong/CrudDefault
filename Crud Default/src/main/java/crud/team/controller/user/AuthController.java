@@ -1,6 +1,5 @@
 package crud.team.controller.user;
 
-import crud.team.aop.annotation.StopWatch;
 import crud.team.dto.user.*;
 import crud.team.response.Response;
 import crud.team.service.user.AuthService;
@@ -23,7 +22,6 @@ public class AuthController {
     private final AuthService authService;
 
 
-    @StopWatch
     @PostMapping("/signup")
     public Response signup(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
         authService.signup(signUpRequestDto);
