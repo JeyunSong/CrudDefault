@@ -16,5 +16,5 @@ public interface PostRepositoryCustom {
     Page<Post> keywordFilter(Pageable pageable, String keyword);
 
     // Warmup
-    List<P.PostSimpleRequestDto> warmupNamedPost();
+    List<P.PostSimpleResponseDto> warmupNamedPost();
 }

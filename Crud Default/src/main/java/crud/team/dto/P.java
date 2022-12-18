@@ -45,7 +45,7 @@ public class P {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class PostDetailRequestDto {
+    public static class PostDetailResponseDto {
         private int postId;
         private String title;
         private String content;
@@ -54,8 +54,8 @@ public class P {
         private String createTime;
         private int likeNum;
         private int commentNum;
-        public static P.PostDetailRequestDto toDto(Post post) {
-            return new P.PostDetailRequestDto(
+        public static P.PostDetailResponseDto toDto(Post post) {
+            return new P.PostDetailResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
@@ -73,7 +73,7 @@ public class P {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class PostSimpleRequestDto {
+    public static class PostSimpleResponseDto {
         private int postId;
         private String title;
         private boolean imgStatus;
@@ -82,8 +82,8 @@ public class P {
         private int likeNum;
         private int commentNum;
 
-        public static P.PostSimpleRequestDto toDto(Post post) {
-            return new P.PostSimpleRequestDto(
+        public static P.PostSimpleResponseDto toDto(Post post) {
+            return new P.PostSimpleResponseDto(
                     post.getId() ,
                     post.getTitle(),
                     (!post.getImgUrl().equals("")),

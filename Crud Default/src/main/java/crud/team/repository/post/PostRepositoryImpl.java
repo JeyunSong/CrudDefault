@@ -7,7 +7,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import crud.team.dto.P.PostSimpleRequestDto;
+import crud.team.dto.P.PostSimpleResponseDto;
 import crud.team.entity.post.Post;
 import crud.team.entity.post.QPost;
 import lombok.RequiredArgsConstructor;
@@ -58,9 +58,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     // WarmUp -> Return ProductDetailResponseDto Category Top 100
-    public List<PostSimpleRequestDto> warmupNamedPost() {
+    public List<PostSimpleResponseDto> warmupNamedPost() {
         return queryFactory.from(qPost)
-                .select(Projections.constructor(PostSimpleRequestDto.class,qPost
+                .select(Projections.constructor(PostSimpleResponseDto.class,qPost
                 ))
                 .orderBy(qPost.likeNum.desc())
                 .limit(500)
@@ -76,13 +76,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return booleanTemplate.gt(0);
     }
 
-    // 키워드 Filter
+    // 제목 키워드 Filter
     private BooleanExpression keywordContain(String keyword) {
         if (StringUtils.isNullOrEmpty(keyword)) return null;
         return qPost.title.contains(keyword);
     }
 
-    // 키워드 Filter
+    // 작성자 키워드 Filter
     private BooleanExpression writerContain(String writerKeyword) {
         if (StringUtils.isNullOrEmpty(writerKeyword)) return null;
         return qPost.writer.contains(writerKeyword);

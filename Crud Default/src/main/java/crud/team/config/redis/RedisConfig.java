@@ -1,6 +1,6 @@
 package crud.team.config.redis;
 
-import crud.team.dto.P.PostDetailRequestDto;
+import crud.team.dto.P.PostDetailResponseDto;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<String, PostDetailRequestDto> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, PostDetailResponseDto> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());

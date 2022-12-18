@@ -39,7 +39,6 @@ public class PostController {
         return success();
     }
 
-
     // 게시물 작성
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,7 +54,6 @@ public class PostController {
     // 게시글 전체 검색
     @GetMapping("/post")
     public Response findAllPost(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // ex) http://localhost:8080/api/post?page=0
         return success(postService.findAll(pageable));
     }
 
